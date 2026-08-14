@@ -1,0 +1,297 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>At-Home Strength Checkoff</title>
+<style>
+  :root{
+    --bg:#f6f4ef;
+    --card:#ffffff;
+    --text:#222;
+    --muted:#666;
+    --line:#ddd8cf;
+    --accent:#4d6b57;
+    --accent-soft:#e8efe9;
+    --done:#dff1e3;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--text);
+  }
+  .wrap{
+    max-width:760px;
+    margin:0 auto;
+    padding:24px 16px 48px;
+  }
+  h1{
+    margin:0 0 6px;
+    font-size:clamp(1.8rem,4vw,2.5rem);
+  }
+  .sub{
+    color:var(--muted);
+    margin-bottom:20px;
+    line-height:1.45;
+  }
+  .status{
+    background:var(--accent-soft);
+    border:1px solid #cdd9cf;
+    border-radius:14px;
+    padding:14px 16px;
+    margin:0 0 18px;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+  }
+  .status strong{font-size:1.05rem}
+  .section{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:16px;
+    margin:14px 0;
+    box-shadow:0 2px 10px rgba(0,0,0,.03);
+  }
+  .section h2{
+    margin:0 0 4px;
+    font-size:1.25rem;
+  }
+  .hint{
+    margin:0 0 12px;
+    color:var(--muted);
+    font-size:.94rem;
+  }
+  .item{
+    display:flex;
+    gap:12px;
+    align-items:flex-start;
+    padding:11px 8px;
+    border-radius:10px;
+    transition:.15s ease;
+  }
+  .item + .item{border-top:1px solid #eeeae3}
+  .item.done{background:var(--done)}
+  input[type=checkbox]{
+    width:24px;
+    height:24px;
+    margin-top:2px;
+    accent-color:var(--accent);
+    flex:0 0 auto;
+  }
+  label{
+    cursor:pointer;
+    line-height:1.35;
+    width:100%;
+  }
+  .name{font-weight:700}
+  .dose{
+    display:block;
+    color:var(--muted);
+    font-size:.92rem;
+    margin-top:2px;
+  }
+  .footer{
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+    margin-top:18px;
+  }
+  button{
+    border:0;
+    border-radius:11px;
+    padding:11px 14px;
+    font-weight:700;
+    cursor:pointer;
+    font-size:.98rem;
+  }
+  .primary{
+    background:var(--accent);
+    color:white;
+  }
+  .secondary{
+    background:#e6e2da;
+    color:#333;
+  }
+  .message{
+    margin-top:14px;
+    font-weight:700;
+    min-height:1.4em;
+  }
+  .note{
+    margin-top:22px;
+    font-size:.88rem;
+    color:var(--muted);
+    line-height:1.45;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>At-Home Strength Checkoff</h1>
+  <div class="sub">
+    For the days the gym doesn't happen. Do enough to keep the body moving — not enough to make this another giant obligation.
+  </div>
+
+  <div class="status">
+    <div>
+      <strong id="today"></strong><br>
+      <span id="count">0 activities checked off</span>
+    </div>
+    <div id="goalText">Minimum day: 5 activities</div>
+  </div>
+
+  <section class="section">
+    <h2>Balance Board</h2>
+    <p class="hint">Choose 2–3. Keep a stable support nearby.</p>
+
+    <div class="item">
+      <input id="b1" type="checkbox">
+      <label for="b1"><span class="name">Comfortable balance</span><span class="dose">30–60 seconds</span></label>
+    </div>
+    <div class="item">
+      <input id="b2" type="checkbox">
+      <label for="b2"><span class="name">Controlled side-to-side</span><span class="dose">8–12 slow shifts each direction</span></label>
+    </div>
+    <div class="item">
+      <input id="b3" type="checkbox">
+      <label for="b3"><span class="name">Controlled front-to-back</span><span class="dose">8–12 slow shifts each direction</span></label>
+    </div>
+    <div class="item">
+      <input id="b4" type="checkbox">
+      <label for="b4"><span class="name">Mini squat / low hold</span><span class="dose">5–8 shallow squats or a 15–30 second hold</span></label>
+    </div>
+    <div class="item">
+      <input id="b5" type="checkbox">
+      <label for="b5"><span class="name">Challenge balance</span><span class="dose">Narrow stance or brief reduced-hand-support practice; skip eyes-closed unless very secure</span></label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Kettlebell</h2>
+    <p class="hint">Use the weight that lets you move cleanly. Current swing/carry reference: 30 lb.</p>
+
+    <div class="item">
+      <input id="k1" type="checkbox">
+      <label for="k1"><span class="name">Kettlebell swings</span><span class="dose">3 × 12–15</span></label>
+    </div>
+    <div class="item">
+      <input id="k2" type="checkbox">
+      <label for="k2"><span class="name">Goblet squats</span><span class="dose">2–3 × 8–12</span></label>
+    </div>
+    <div class="item">
+      <input id="k3" type="checkbox">
+      <label for="k3"><span class="name">Single-arm rows</span><span class="dose">2–3 × 8–12 each side</span></label>
+    </div>
+    <div class="item">
+      <input id="k4" type="checkbox">
+      <label for="k4"><span class="name">Single-arm overhead press</span><span class="dose">2 × 6–10 each side; use a lighter weight if needed</span></label>
+    </div>
+    <div class="item">
+      <input id="k5" type="checkbox">
+      <label for="k5"><span class="name">Suitcase carry</span><span class="dose">2–3 × 30–60 seconds each side</span></label>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Doorway Chin-Up Bar</h2>
+    <p class="hint">Feet stay supported. Gradually let your arms take more of your weight.</p>
+
+    <div class="item">
+      <input id="c1" type="checkbox">
+      <label for="c1"><span class="name">Supported hang</span><span class="dose">2–3 × 10–20 seconds</span></label>
+    </div>
+    <div class="item">
+      <input id="c2" type="checkbox">
+      <label for="c2"><span class="name">Supported scapular pulls</span><span class="dose">2 × 5–8; elbows stay straight</span></label>
+    </div>
+    <div class="item">
+      <input id="c3" type="checkbox">
+      <label for="c3"><span class="name">Foot-assisted chin-up / pull</span><span class="dose">2 × 3–6 controlled reps</span></label>
+    </div>
+  </section>
+
+  <div class="footer">
+    <button class="primary" id="finish">Done for today</button>
+    <button class="secondary" id="reset">Reset today's checks</button>
+  </div>
+  <div class="message" id="message"></div>
+
+  <div class="note">
+    Stop or modify anything that causes sharp pain, joint pain, dizziness, or unusual symptoms.
+    This page saves today's checkmarks only in this browser.
+  </div>
+</div>
+
+<script>
+(function(){
+  const boxes = [...document.querySelectorAll('input[type=checkbox]')];
+  const todayEl = document.getElementById('today');
+  const countEl = document.getElementById('count');
+  const messageEl = document.getElementById('message');
+  const goalText = document.getElementById('goalText');
+
+  const now = new Date();
+  const dateKey = now.toISOString().slice(0,10);
+  const storageKey = 'homeWorkout-' + dateKey;
+  todayEl.textContent = now.toLocaleDateString(undefined,{weekday:'long',month:'long',day:'numeric'});
+
+  function load(){
+    const saved = JSON.parse(localStorage.getItem(storageKey) || '{}');
+    boxes.forEach(b => b.checked = !!saved[b.id]);
+    update();
+  }
+
+  function save(){
+    const data = {};
+    boxes.forEach(b => data[b.id] = b.checked);
+    localStorage.setItem(storageKey, JSON.stringify(data));
+  }
+
+  function update(){
+    let n = 0;
+    boxes.forEach(b => {
+      b.closest('.item').classList.toggle('done', b.checked);
+      if(b.checked) n++;
+    });
+    countEl.textContent = n + (n === 1 ? ' activity checked off' : ' activities checked off');
+
+    if(n >= 8){
+      goalText.textContent = 'Full home workout ✓';
+    } else if(n >= 5){
+      goalText.textContent = 'Minimum day complete ✓';
+    } else {
+      goalText.textContent = 'Minimum day: 5 activities';
+    }
+  }
+
+  boxes.forEach(b => b.addEventListener('change', () => {
+    save();
+    update();
+    messageEl.textContent = '';
+  }));
+
+  document.getElementById('finish').addEventListener('click', () => {
+    const n = boxes.filter(b => b.checked).length;
+    if(n >= 8) messageEl.textContent = 'Strong home workout. Gym officially not required today.';
+    else if(n >= 5) messageEl.textContent = 'Minimum day achieved. That counts.';
+    else if(n > 0) messageEl.textContent = 'You did something — and that still counts. Add more only if it feels useful.';
+    else messageEl.textContent = 'Nothing checked yet. Pick the easiest useful thing and start there.';
+  });
+
+  document.getElementById('reset').addEventListener('click', () => {
+    boxes.forEach(b => b.checked = false);
+    localStorage.removeItem(storageKey);
+    update();
+    messageEl.textContent = '';
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>
