@@ -122,6 +122,29 @@
     font-weight:700;
     min-height:1.4em;
   }
+  .log-panel textarea{
+    width:100%;
+    min-height:180px;
+    resize:vertical;
+    border:1px solid var(--line);
+    border-radius:10px;
+    padding:12px;
+    margin:0 0 10px;
+    background:#fbfaf7;
+    color:var(--text);
+    font:inherit;
+    line-height:1.5;
+  }
+  .copy-row{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .copy-status{
+    color:var(--accent);
+    font-weight:700;
+  }
   .note{
     margin-top:22px;
     font-size:.88rem;
@@ -265,6 +288,16 @@
   </div>
   <div class="message" id="message"></div>
 
+  <section class="section log-panel" id="logPanel" hidden>
+    <h2>Today's Completed Exercises</h2>
+    <p class="hint">A dated list of everything you checked. Copy it into your workout log, notes, or chat.</p>
+    <textarea id="logText" readonly aria-label="Completed exercise log"></textarea>
+    <div class="copy-row">
+      <button class="secondary" id="copyLog">Copy log</button>
+      <span class="copy-status" id="copyStatus" aria-live="polite"></span>
+    </div>
+  </section>
+
   <div class="note">
     Stop or modify anything that causes sharp pain, joint pain, dizziness, or unusual symptoms.
     This page saves today's checkmarks only in this browser.
@@ -278,6 +311,9 @@
   const countEl = document.getElementById('count');
   const messageEl = document.getElementById('message');
   const goalText = document.getElementById('goalText');
+  const logPanel = document.getElementById('logPanel');
+  const logText = document.getElementById('logText');
+  const copyStatus = document.getElementById('copyStatus');
 
   const now = new Date();
   const dateKey = now.toISOString().slice(0,10);
@@ -313,10 +349,38 @@
     }
   }
 
+  function buildLog(){
+    const completed = boxes.filter(b => b.checked);
+    if(!completed.length){
+      logPanel.hidden = true;
+      return;
+    }
+
+    const dateLabel = now.toLocaleDateString(undefined,{
+      weekday:'long', year:'numeric', month:'long', day:'numeric'
+    });
+    const exerciseNames = completed.map(b =>
+      b.closest('.item').querySelector('.name').textContent
+    );
+
+    logText.value = [
+      'At-Home Strength — ' + dateLabel,
+      'Completed: ' + completed.length,
+      '',
+      ...exerciseNames.map(name => '• ' + name)
+    ].join('\n');
+    logText.rows = Math.max(7, exerciseNames.length + 4);
+    copyStatus.textContent = '';
+    logPanel.hidden = false;
+    logPanel.scrollIntoView({behavior:'smooth', block:'nearest'});
+  }
+
   boxes.forEach(b => b.addEventListener('change', () => {
     save();
     update();
     messageEl.textContent = '';
+    logPanel.hidden = true;
+    copyStatus.textContent = '';
   }));
 
   document.getElementById('finish').addEventListener('click', () => {
@@ -325,6 +389,18 @@
     else if(n >= 5) messageEl.textContent = 'Minimum day achieved. That counts.';
     else if(n > 0) messageEl.textContent = 'You did something — and that still counts. Add more only if it feels useful.';
     else messageEl.textContent = 'Nothing checked yet. Pick the easiest useful thing and start there.';
+    buildLog();
+  });
+
+  document.getElementById('copyLog').addEventListener('click', async () => {
+    try{
+      await navigator.clipboard.writeText(logText.value);
+      copyStatus.textContent = 'Copied ✓';
+    } catch(e){
+      logText.focus();
+      logText.select();
+      copyStatus.textContent = document.execCommand('copy') ? 'Copied ✓' : 'Select the text and copy it manually.';
+    }
   });
 
   document.getElementById('reset').addEventListener('click', () => {
@@ -332,6 +408,8 @@
     localStorage.removeItem(storageKey);
     update();
     messageEl.textContent = '';
+    logPanel.hidden = true;
+    copyStatus.textContent = '';
   });
 
   load();
